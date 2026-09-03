@@ -1,0 +1,333 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --ink: #1c2530;
+    --ink-soft: #4b5563;
+    --paper: #f7f5f1;
+    --paper-panel: #ffffff;
+    --accent: #2f6f62;
+    --accent-tint: #dce8e4;
+    --accent-dark: #234f45;
+    --error: #a3352c;
+    --error-tint: #f5e2df;
+    --border: #e2ddd3;
+    --radius: 3px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    margin: 0;
+}
+
+a {
+    color: var(--accent-dark);
+}
+
+/* ---------- Auth split-screen layout ---------- */
+
+.auth-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+}
+
+.auth-brand {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-brand::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(247,245,241,0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.6;
+}
+
+.auth-brand-mark {
+    position: relative;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    letter-spacing: 0.01em;
+}
+
+.auth-brand-glyph {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 96px;
+}
+
+.auth-brand-copy {
+    position: relative;
+    max-width: 320px;
+}
+
+.auth-brand-copy h1 {
+    font-size: 32px;
+    line-height: 1.25;
+    color: var(--paper);
+}
+
+.auth-brand-copy p {
+    margin-top: 14px;
+    color: rgba(247,245,241,0.7);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.auth-form-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+}
+
+.auth-form-wrap {
+    width: 100%;
+    max-width: 360px;
+}
+
+.auth-form-wrap h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.auth-subtitle {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0 0 32px;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+}
+
+.field input {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--paper);
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.btn-primary:hover {
+    background: var(--accent-dark);
+}
+
+.btn-primary:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+.auth-switch {
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--ink-soft);
+}
+
+.auth-switch a {
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Messages ---------- */
+
+.notice {
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.notice-success {
+    background: var(--accent-tint);
+    color: var(--accent-dark);
+    border: 1px solid #c3d8d2;
+}
+
+.error-list {
+    list-style: none;
+    padding: 12px 14px;
+    margin: 0 0 24px;
+    background: var(--error-tint);
+    border: 1px solid #e5c3bd;
+    border-radius: var(--radius);
+    color: var(--error);
+    font-size: 14px;
+}
+
+.error-list li + li {
+    margin-top: 4px;
+}
+
+/* ---------- Dashboard ---------- */
+
+.dash-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid var(--border);
+}
+
+.dash-mark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+}
+
+.btn-ghost {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.btn-ghost:hover {
+    color: var(--ink);
+    border-color: var(--ink-soft);
+}
+
+.dash-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 40px 48px;
+}
+
+.dash-content {
+    max-width: 480px;
+}
+
+.dash-content h1 {
+    font-size: 36px;
+    line-height: 1.2;
+}
+
+.dash-content h1 em {
+    font-style: normal;
+    color: var(--accent-dark);
+}
+
+.dash-facts {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.dash-fact {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 15px;
+}
+
+.dash-fact + .dash-fact {
+    border-top: 1px solid var(--border);
+}
+
+.dash-fact-label {
+    color: var(--ink-soft);
+}
+
+.dash-fact-value {
+    font-weight: 500;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-brand {
+        padding: 32px 28px;
+    }
+
+    .auth-brand-glyph {
+        margin-bottom: 32px;
+    }
+
+    .auth-brand-copy p {
+        display: none;
+    }
+
+    .dash-header,
+    .dash-main {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
