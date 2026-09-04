@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/includes/auth.php';
+require __DIR__ . '/../../includes/auth.php';
 
 $_SESSION = [];
 
@@ -18,5 +18,5 @@ if (ini_get('session.use_cookies')) {
 
 session_destroy();
 
-header('Location: login.php');
+header('Location: ../../features/auth/login.php');
 exit;

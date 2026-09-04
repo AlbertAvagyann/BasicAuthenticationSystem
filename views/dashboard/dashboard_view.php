@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 <div class="dash-shell">
     <header class="dash-header">
         <div class="dash-mark">Basic Auth</div>
-        <form method="POST" action="logout.php">
+        <form method="POST" action="/features/auth/logout.php">
             <button type="submit" class="btn-ghost">Log out</button>
         </form>
     </header>

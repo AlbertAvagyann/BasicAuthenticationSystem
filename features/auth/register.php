@@ -1,9 +1,11 @@
 <?php
-require __DIR__ . '/config/db.php';
-require __DIR__ . '/includes/auth.php';
+
+require __DIR__ . '/../../config/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/tokens.php';
 
 if (isLoggedIn()) {
-    header('Location: dashboard.php');
+    header('Location: ../../features/dashboard/dashboard.php');
     exit;
 }
 
@@ -12,8 +14,8 @@ $name = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name     = trim($_POST['name'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($name === '' || $email === '' || $password === '') {
@@ -31,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
         $stmt->execute([$email]);
+
         if ($stmt->fetch()) {
             $errors[] = 'This email is already registered.';
         }
@@ -39,12 +42,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
-        $stmt->execute([$name, $email, $hashedPassword]);
+        $stmt = $pdo->prepare(
+            'INSERT INTO users (name, email, password)
+             VALUES (?, ?, ?)'
+        );
 
-        header('Location: login.php?registered=1');
+        $stmt->execute([
+            $name,
+            $email,
+            $hashedPassword
+        ]);
+
+        $userId = $pdo->lastInsertId();
+
+        $_SESSION['pending_verification_user_id'] = $userId;
+
+        header('Location: ../../features/auth/registration_success.php');
         exit;
     }
 }
 
-require __DIR__ . '/views/register_view.php';
+require __DIR__ . '/../../views/auth/register_view.php';

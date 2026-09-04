@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 <div class="auth-shell">
@@ -18,16 +18,20 @@
                 <circle cx="23" cy="28" r="2.5" fill="#F7F5F1"/>
             </svg>
             <div class="auth-brand-copy">
-                <h1>Create your account.</h1>
-                <p>Takes less than a minute to get started.</p>
+                <h1>Welcome back.</h1>
+                <p>Sign in to pick up right where you left off.</p>
             </div>
         </div>
     </div>
 
     <div class="auth-form-side">
         <div class="auth-form-wrap">
-            <h2>Register</h2>
-            <p class="auth-subtitle">Fill in your details below.</p>
+            <h2>Log in</h2>
+            <p class="auth-subtitle">Enter your details to continue.</p>
+
+            <?php if (isset($_GET['registered'])): ?>
+                <div class="notice notice-success">Registration successful. Please log in.</div>
+            <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
                 <ul class="error-list">
@@ -37,12 +41,7 @@
                 </ul>
             <?php endif; ?>
 
-            <form method="POST" action="register.php">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" value="<?= htmlspecialchars($name) ?>" autocomplete="name">
-                </div>
-
+            <form method="POST" action="/features/auth/login.php">
                 <div class="field">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>" autocomplete="email">
@@ -50,13 +49,14 @@
 
                 <div class="field">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" autocomplete="new-password">
+                    <input type="password" id="password" name="password" autocomplete="current-password">
                 </div>
 
-                <button type="submit" class="btn-primary">Create account</button>
+                <button type="submit" class="btn-primary">Log in</button>
             </form>
 
-            <p class="auth-switch">Already have an account? <a href="login.php">Log in here</a></p>
+            <p class="auth-switch"><a href="/features/password/forgot_password.php">Forgot password?</a></p>
+            <p class="auth-switch">Don't have an account? <a href="/features/auth/register.php">Register here</a></p>
         </div>
     </div>
 </div>
