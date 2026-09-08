@@ -5,8 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin - Manage Users</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/theme.js"></script>
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+    <span class="icon-light">🌙</span>
+    <span class="icon-dark">☀️</span>
+</button>
 <h1>Users</h1>
 
 <table border="1" cellpadding="8">
@@ -36,6 +42,7 @@
             <?php if ($canManage): ?>
                 <td>
                     <form method="POST" action="/features/admin/update_role.php">
+                        <?= csrfField() ?>
                         <input type="hidden" name="user_id" value="<?= htmlspecialchars($u['id']) ?>">
                         <select name="role_id">
                             <?php foreach ($roles as $r): ?>

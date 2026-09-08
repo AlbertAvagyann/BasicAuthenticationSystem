@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Verify your email</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/theme.js"></script>
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+    <span class="icon-light">🌙</span>
+    <span class="icon-dark">☀️</span>
+</button>
 <div class="auth-shell">
     <div class="auth-brand">
         <div class="auth-brand-mark">Basic Auth</div>
 
         <div>
             <svg class="auth-brand-glyph" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="20" width="26" height="18" rx="2" stroke="#F7F5F1" stroke-width="2"/>
-                <path d="M16 20V14C16 9.58172 19.5817 6 24 6C28.4183 6 32 9.58172 32 14V20" stroke="#F7F5F1" stroke-width="2"/>
-                <circle cx="23" cy="28" r="2.5" fill="#F7F5F1"/>
+                <rect x="10" y="20" width="26" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 20V14C16 9.58172 19.5817 6 24 6C28.4183 6 32 9.58172 32 14V20" stroke="currentColor" stroke-width="2"/>
+                <circle cx="23" cy="28" r="2.5" fill="currentColor"/>
             </svg>
             <div class="auth-brand-copy">
                 <h1>Almost there.</h1>
@@ -34,6 +39,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/features/verification/send_verification.php">
+                <?= csrfField() ?>
                 <button type="submit" class="btn-primary">Resend verification email</button>
             </form>
 

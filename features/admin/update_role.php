@@ -8,12 +8,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /features/admin/users.php');
     exit;
 }
+
+requireCsrf();
+
 $targetUserId = (int) ($_POST['user_id'] ?? 0);
 $newRoleId = (int) ($_POST['role_id'] ?? 0);
 if ($targetUserId <= 0 || $newRoleId <= 0) {
     http_response_code(400);
     exit('Invalid request.');
 }
+
+if ($targetUserId === (int) $_SESSION['user_id']) {
+    http_response_code(400);
+    exit('You cannot change your own role.');
+}
+
 $stmt = $pdo->prepare('SELECT id FROM users WHERE id = ?');
 $stmt->execute([$targetUserId]);
 if (!$stmt->fetch()) {

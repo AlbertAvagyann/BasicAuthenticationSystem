@@ -10,7 +10,6 @@ function hasRole(PDO $pdo, int $userId, string $roleName): bool
     );
     $stmt->execute([$userId]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
     return $row && $row['name'] === $roleName;
 }
 
@@ -31,7 +30,6 @@ function can(PDO $pdo, int $userId, string $permissionName): bool
 function requireRole(PDO $pdo, string $roleName): void
 {
     requireLogin();
-
     if (!hasRole($pdo, $_SESSION['user_id'], $roleName)) {
         http_response_code(403);
         exit('403 Forbidden');
@@ -41,7 +39,6 @@ function requireRole(PDO $pdo, string $roleName): void
 function requirePermission(PDO $pdo, string $permissionName): void
 {
     requireLogin();
-
     if (!can($pdo, $_SESSION['user_id'], $permissionName)) {
         http_response_code(403);
         exit('403 Forbidden');

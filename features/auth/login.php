@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../config/db.php';
 require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/login_throttle.php';
 
 if (isLoggedIn()) {
     header('Location: ../../features/dashboard/dashboard.php');
@@ -11,6 +12,8 @@ $errors = [];
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireCsrf();
+
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -19,13 +22,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id, name, email, password,email_verified_at FROM users WHERE email = ?');
+        $stmt = $pdo->prepare('SELECT id, name, email, password, email_verified_at, failed_login_attempts, locked_until FROM users WHERE email = ?');
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        if ($user && isAccountLocked($user)) {
+            $minutes = (int) ceil(lockoutRemainingSeconds($user) / 60);
+            $errors[] = "Too many failed attempts. Please try again in {$minutes} minute(s).";
+        } elseif (!$user || !password_verify($password, $user['password'])) {
+            if ($user) {
+                registerFailedLogin($pdo, (int) $user['id'], (int) $user['failed_login_attempts']);
+            }
             $errors[] = 'Incorrect email or password.';
         } else {
+            resetFailedLogins($pdo, (int) $user['id']);
+            session_regenerate_id(true);
 
             $_SESSION['user_id']   = $user['id'];
             $_SESSION['user_name'] = $user['name'];

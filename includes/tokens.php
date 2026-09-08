@@ -1,5 +1,7 @@
 <?php
 
+const EMAIL_THROTTLE_SECONDS = 60;
+
 function generateToken(): array
 {
     $raw = bin2hex(random_bytes(32));
@@ -22,4 +24,27 @@ function isExpired(?string $expiresAt): bool
         return true;
     }
     return new DateTime($expiresAt) < new DateTime();
+}
+
+function secondsSinceLastRequest(?string $lastRequestAt): ?int
+{
+    if ($lastRequestAt === null) {
+        return null;
+    }
+    return time() - (new DateTime($lastRequestAt))->getTimestamp();
+}
+
+function isThrottled(?string $lastRequestAt): bool
+{
+    $elapsed = secondsSinceLastRequest($lastRequestAt);
+    return $elapsed !== null && $elapsed < EMAIL_THROTTLE_SECONDS;
+}
+
+function throttleRemainingSeconds(?string $lastRequestAt): int
+{
+    $elapsed = secondsSinceLastRequest($lastRequestAt);
+    if ($elapsed === null) {
+        return 0;
+    }
+    return max(0, EMAIL_THROTTLE_SECONDS - $elapsed);
 }

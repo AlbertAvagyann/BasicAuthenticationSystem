@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registration Successful</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/theme.js"></script>
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+    <span class="icon-light">🌙</span>
+    <span class="icon-dark">☀️</span>
+</button>
 
 <div class="auth-shell">
 
@@ -26,13 +31,13 @@
                         width="26"
                         height="18"
                         rx="2"
-                        stroke="#F7F5F1"
+                        stroke="currentColor"
                         stroke-width="2"
                 />
 
                 <path
                         d="M16 20V14C16 9.58172 19.5817 6 24 6C28.4183 6 32 9.58172 32 14V20"
-                        stroke="#F7F5F1"
+                        stroke="currentColor"
                         stroke-width="2"
                 />
 
@@ -40,7 +45,7 @@
                         cx="23"
                         cy="28"
                         r="2.5"
-                        fill="#F7F5F1"
+                        fill="currentColor"
                 />
 
             </svg>
@@ -79,6 +84,7 @@
 
 
             <form action="/features/verification/send_verification.php" method="POST">
+                <?= csrfField() ?>
 
                 <button type="submit" class="btn-primary">
                     Send verification email

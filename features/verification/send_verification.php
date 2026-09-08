@@ -10,7 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$userId = $_SESSION['pending_verification_user_id'] ?? null;
+requireCsrf();
+
+$userId = $_SESSION['pending_verification_user_id'] ?? $_SESSION['user_id'] ?? null;
 
 if (!$userId) {
     header('Location: /features/auth/register.php');
@@ -18,7 +20,7 @@ if (!$userId) {
 }
 
 $stmt = $pdo->prepare(
-    'SELECT id, name, email, email_verified_at
+    'SELECT id, name, email, email_verified_at, last_verification_request_at
      FROM users
      WHERE id = ?'
 );
@@ -41,13 +43,22 @@ if ($user['email_verified_at'] !== null) {
     exit;
 }
 
+if (isThrottled($user['last_verification_request_at'])) {
+    $seconds = throttleRemainingSeconds($user['last_verification_request_at']);
+    //die("THROTTLED: {$seconds} seconds remaining");
+
+    header('Location: /features/auth/registration_success.php?throttled=' . $seconds);
+    exit;
+}
+
 $token = generateToken();
 $tokenExpiresAt = expiresInMinutes(60);
 
 $update = $pdo->prepare(
     'UPDATE users
      SET verification_token = ?,
-         verification_token_expires_at = ?
+         verification_token_expires_at = ?,
+         last_verification_request_at = NOW()
      WHERE id = ?'
 );
 

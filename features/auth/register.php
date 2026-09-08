@@ -14,6 +14,8 @@ $name = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireCsrf();
+
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -22,12 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'All fields are required.';
     }
 
+    if ($name !== '' && (str_contains($name, '@') || filter_var($name, FILTER_VALIDATE_EMAIL))) {
+        $errors[] = 'Name cannot be an email address.';
+    }
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Invalid email format.';
     }
 
-    if (strlen($password) < 6) {
-        $errors[] = 'Password must be at least 6 characters long.';
+    if (strlen($password) < 8) {
+        $errors[] = 'Password must be at least 8 characters long.';
     }
 
     if (empty($errors)) {
@@ -42,23 +48,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $pdo->prepare(
-            'INSERT INTO users (name, email, password)
-             VALUES (?, ?, ?)'
-        );
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO users (name, email, password)
+                 VALUES (?, ?, ?)'
+            );
 
-        $stmt->execute([
-            $name,
-            $email,
-            $hashedPassword
-        ]);
+            $stmt->execute([
+                $name,
+                $email,
+                $hashedPassword
+            ]);
 
-        $userId = $pdo->lastInsertId();
+            $userId = $pdo->lastInsertId();
 
-        $_SESSION['pending_verification_user_id'] = $userId;
+            session_regenerate_id(true);
+            $_SESSION['pending_verification_user_id'] = $userId;
 
-        header('Location: ../../features/auth/registration_success.php');
-        exit;
+            header('Location: ../../features/auth/registration_success.php');
+            exit;
+        } catch (PDOException $e) {
+            // Catches the race condition where two requests pass the
+            // uniqueness check above at the same time. Requires a
+            // UNIQUE constraint on users.email at the database level.
+            if ((int) $e->getCode() === 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                $errors[] = 'This email is already registered.';
+            } else {
+                error_log('Registration failed: ' . $e->getMessage());
+                $errors[] = 'Something went wrong. Please try again.';
+            }
+        }
     }
 }
 

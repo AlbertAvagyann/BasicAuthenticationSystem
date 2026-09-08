@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/theme.js"></script>
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+    <span class="icon-light">🌙</span>
+    <span class="icon-dark">☀️</span>
+</button>
 <div class="dash-shell">
     <header class="dash-header">
         <div class="dash-mark">Basic Auth</div>
         <form method="POST" action="/features/auth/logout.php">
+            <?= csrfField() ?>
             <button type="submit" class="btn-ghost">Log out</button>
         </form>
     </header>
