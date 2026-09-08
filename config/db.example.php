@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Yerevan');
 $host   = 'localhost';
 $dbname = 'basicauthorization_app';
 $dbuser = 'root';
