@@ -2,6 +2,7 @@
 require __DIR__ . '/../../config/db.php';
 require __DIR__ . '/../../includes/mailer.php';
 require __DIR__ . '/../../includes/tokens.php';
+require __DIR__ . '/../../includes/auth.php';
 
 $errors = [];
 $success = false;
