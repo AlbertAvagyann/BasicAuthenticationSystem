@@ -3,6 +3,7 @@
 require __DIR__ . '/../../config/db.php';
 require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/roles.php';
+require_once __DIR__ . '/../../includes/error_page.php';
 
 requirePermission($pdo, 'manage_users');
 
@@ -15,11 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$userId = filter_input(
-    INPUT_POST,
-    'user_id',
-    FILTER_VALIDATE_INT
-);
+$userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
 
 if (!$userId) {
     header('Location: /features/admin/users.php');
@@ -27,14 +24,10 @@ if (!$userId) {
 }
 
 if ($userId === (int) $_SESSION['user_id']) {
-    exit('You cannot delete your own account.');
+    renderErrorPage(400, 'You cannot delete your own account.');
 }
 
-$stmt = $pdo->prepare(
-    'DELETE FROM users WHERE id = ?'
-);
+deleteUserById($pdo, $userId);
 
-$stmt->execute([$userId]);
-
-header('Location: /features/admin/users.php');
+header('Location: /features/admin/users.php?deleted=1');
 exit;

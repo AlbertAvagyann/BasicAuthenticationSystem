@@ -36,31 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Password must be at least 8 characters long.';
     }
 
-    if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
-        $stmt->execute([$email]);
-
-        if ($stmt->fetch()) {
-            $errors[] = 'This email is already registered.';
-        }
+    if (empty($errors) && emailExists($pdo, $email)) {
+        $errors[] = 'This email is already registered.';
     }
 
     if (empty($errors)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            $stmt = $pdo->prepare(
-                'INSERT INTO users (name, email, password)
-                 VALUES (?, ?, ?)'
-            );
-
-            $stmt->execute([
-                $name,
-                $email,
-                $hashedPassword
-            ]);
-
-            $userId = $pdo->lastInsertId();
+            $userId = createUser($pdo, $name, $email, $hashedPassword);
 
             session_regenerate_id(true);
             $_SESSION['pending_verification_user_id'] = $userId;
@@ -68,9 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../../features/auth/registration_success.php');
             exit;
         } catch (PDOException $e) {
-            // Catches the race condition where two requests pass the
-            // uniqueness check above at the same time. Requires a
-            // UNIQUE constraint on users.email at the database level.
             if ((int) $e->getCode() === 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
                 $errors[] = 'This email is already registered.';
             } else {

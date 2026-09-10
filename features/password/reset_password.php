@@ -3,6 +3,7 @@ require __DIR__ . '/../../config/db.php';
 require __DIR__ . '/../../includes/mailer.php';
 require __DIR__ . '/../../includes/tokens.php';
 require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../repositories/passwordResetRepository.php';
 
 $errors = [];
 $success = false;
@@ -10,9 +11,7 @@ $rawToken = $_POST['token'] ?? $_GET['token'] ?? '';
 $user = null;
 
 if ($rawToken !== '') {
-    $stmt = $pdo->prepare('SELECT id, name, email, password_reset_token_expires_at FROM users WHERE password_reset_token = ?');
-    $stmt->execute([hashToken($rawToken)]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    $user = findUserByPasswordResetTokenHash($pdo, hashToken($rawToken));
 }
 
 $tokenValid = $user !== null && !isExpired($user['password_reset_token_expires_at'] ?? null);
@@ -35,10 +34,7 @@ if ($tokenValid && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $update = $pdo->prepare(
-            'UPDATE users SET password = ?, password_reset_token = NULL, password_reset_token_expires_at = NULL WHERE id = ?'
-        );
-        $update->execute([$hashedPassword, $user['id']]);
+        updateUserPassword($pdo, $user['id'], $hashedPassword);
         $success = true;
     }
 }

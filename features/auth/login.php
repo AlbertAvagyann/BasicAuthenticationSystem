@@ -22,9 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id, name, email, password, email_verified_at, failed_login_attempts, locked_until FROM users WHERE email = ?');
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = findUserByEmail($pdo, $email);
 
         if ($user && isAccountLocked($user)) {
             $minutes = (int) ceil(lockoutRemainingSeconds($user) / 60);

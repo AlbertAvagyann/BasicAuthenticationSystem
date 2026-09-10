@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/../repositories/userRepository.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
@@ -30,9 +31,7 @@ function requireVerifiedUser(PDO $pdo): array
 {
     requireLogin();
 
-    $stmt = $pdo->prepare('SELECT id, name, email, email_verified_at FROM users WHERE id = ?');
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = findUserById($pdo, (int) $_SESSION['user_id']);
 
     if (!$user) {
         session_destroy();

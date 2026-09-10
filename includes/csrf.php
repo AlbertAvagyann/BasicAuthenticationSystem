@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/error_page.php';
+
 function csrfToken(): string
 {
     if (empty($_SESSION['csrf_token'])) {
@@ -23,7 +25,6 @@ function verifyCsrf(?string $token): bool
 function requireCsrf(): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verifyCsrf($_POST['csrf_token'] ?? null)) {
-        http_response_code(403);
-        exit('Invalid or missing CSRF token.');
+        renderErrorPage(403, 'Invalid or missing CSRF token.');
     }
 }

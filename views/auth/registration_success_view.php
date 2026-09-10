@@ -8,11 +8,6 @@
     <script src="/assets/js/theme.js"></script>
 </head>
 <body>
-<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
-    <span class="icon-light">🌙</span>
-    <span class="icon-dark">☀️</span>
-</button>
-
 <div class="auth-shell">
 
     <div class="auth-brand">

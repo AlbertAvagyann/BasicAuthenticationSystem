@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../repositories/userRepository.php';
+
 const MAX_FAILED_ATTEMPTS = 3;
 const LOCKOUT_MINUTES = 15;
 
@@ -26,16 +28,8 @@ function registerFailedLogin(PDO $pdo, int $userId, int $currentAttempts): void
 
     if ($attempts >= MAX_FAILED_ATTEMPTS) {
         $lockedUntil = (new DateTime("+" . LOCKOUT_MINUTES . " minutes"))->format('Y-m-d H:i:s');
-        $stmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ?, locked_until = ? WHERE id = ?');
-        $stmt->execute([$attempts, $lockedUntil, $userId]);
+        updateFailedLoginAttempts($pdo, $userId, $attempts, $lockedUntil);
     } else {
-        $stmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ? WHERE id = ?');
-        $stmt->execute([$attempts, $userId]);
+        updateFailedLoginAttempts($pdo, $userId, $attempts, null);
     }
-}
-
-function resetFailedLogins(PDO $pdo, int $userId): void
-{
-    $stmt = $pdo->prepare('UPDATE users SET failed_login_attempts = 0, locked_until = NULL WHERE id = ?');
-    $stmt->execute([$userId]);
 }

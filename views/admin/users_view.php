@@ -10,12 +10,17 @@
 </head>
 <body>
 
-<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
-    <span class="icon-light">🌙</span>
-    <span class="icon-dark">☀️</span>
-</button>
-
 <h1>Users</h1>
+
+<?php if (isset($_GET['deleted'])): ?>
+    <div class="notice notice-success">User deleted successfully.</div>
+<?php endif; ?>
+
+<?php if (isset($_GET['updated'])): ?>
+    <div class="notice notice-success">User updated successfully.</div>
+<?php endif; ?>
+
+<p><a href="/features/admin/admin.php">&larr; Back to Admin Panel</a></p>
 
 <table border="1" cellpadding="8">
     <thead>
@@ -26,11 +31,7 @@
         <th>Role</th>
         <th>Email Verified</th>
         <th>Created</th>
-
-        <?php if ($canManage): ?>
-            <th>Action</th>
-        <?php endif; ?>
-
+        <th>Action</th>
     </tr>
     </thead>
 
@@ -43,50 +44,23 @@
             <td><?= htmlspecialchars($u['role_name']) ?></td>
             <td><?= $u['email_verified_at'] ? 'Yes' : 'No' ?></td>
             <td><?= htmlspecialchars($u['created_at']) ?></td>
+            <td>
+                <a href="/features/admin/edit_user_form.php?id=<?= htmlspecialchars($u['id']) ?>">Edit</a>
 
-            <?php if ($canManage): ?>
-                <td>
+                <form method="POST"
+                      action="/features/admin/delete_user.php"
+                      style="display: inline;"
+                      onsubmit="return confirm('Are you sure you want to delete this user?');">
 
-                    <form method="POST"
-                          action="/features/admin/update_role.php"
-                          style="display: inline;">
+                    <?= csrfField() ?>
 
-                        <?= csrfField() ?>
+                    <input type="hidden"
+                           name="user_id"
+                           value="<?= htmlspecialchars($u['id']) ?>">
 
-                        <input type="hidden"
-                               name="user_id"
-                               value="<?= htmlspecialchars($u['id']) ?>">
-
-                        <select name="role_id">
-                            <?php foreach ($roles as $r): ?>
-                                <option value="<?= $r['id'] ?>"
-                                        <?= $r['id'] == $u['role_id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($r['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <button type="submit">Update</button>
-                    </form>
-
-
-                    <form method="POST"
-                          action="/features/admin/delete_user.php"
-                          style="display: inline;"
-                          onsubmit="return confirm('Are you sure you want to delete this user?');">
-
-                        <?= csrfField() ?>
-
-                        <input type="hidden"
-                               name="user_id"
-                               value="<?= htmlspecialchars($u['id']) ?>">
-
-                        <button type="submit">Delete</button>
-                    </form>
-
-                </td>
-            <?php endif; ?>
-
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
