@@ -12,10 +12,14 @@
 <div class="dash-shell">
     <header class="dash-header">
         <div class="dash-mark">Basic Auth</div>
-        <form method="POST" action="/features/auth/logout.php">
-            <?= csrfField() ?>
-            <button type="submit" class="btn-ghost">Log out</button>
-        </form>
+        <nav>
+            <a href="/features/profile/view_profile.php" class="btn-ghost">My Profile</a>
+            <a href="/features/posts/posts.php" class="btn-ghost">Posts Feed</a>
+            <form method="POST" action="/features/auth/logout.php" style="display: inline;">
+                <?= csrfField() ?>
+                <button type="submit" class="btn-ghost">Log out</button>
+            </form>
+        </nav>
     </header>
 
     <main class="dash-main">

@@ -15,5 +15,7 @@
 <p>This page is accessible to Moderators and Admins.</p>
 
 <a href="/features/moderator/users.php">View Users</a>
+<br>
+<a href="/features/moderator/all_posts.php">All Posts</a>
 </body>
 </html>

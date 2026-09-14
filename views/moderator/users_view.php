@@ -23,6 +23,7 @@
         <th>Role</th>
         <th>Email Verified</th>
         <th>Created</th>
+        <th>Action</th>
     </tr>
     </thead>
 
@@ -35,6 +36,9 @@
             <td><?= htmlspecialchars($u['role_name']) ?></td>
             <td><?= $u['email_verified_at'] ? 'Yes' : 'No' ?></td>
             <td><?= htmlspecialchars($u['created_at']) ?></td>
+            <td>
+                <a href="/features/moderator/user_posts.php?user_id=<?= htmlspecialchars($u['id']) ?>">Posts</a>
+            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>

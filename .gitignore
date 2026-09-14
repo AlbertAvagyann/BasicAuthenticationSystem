@@ -2,3 +2,7 @@ config/db.php
 .idea/
 vendor/
 *.log
+
+
+assets/uploads/*
+!assets/uploads/.gitkeep

@@ -14,6 +14,7 @@
 
 <ul>
     <li><a href="/features/admin/users.php">Manage Users</a></li>
+    <li><a href="/features/admin/all_posts.php">All Posts</a></li>
 </ul>
 </body>
 </html>

@@ -45,21 +45,24 @@
             <td><?= $u['email_verified_at'] ? 'Yes' : 'No' ?></td>
             <td><?= htmlspecialchars($u['created_at']) ?></td>
             <td>
-                <a href="/features/admin/edit_user_form.php?id=<?= htmlspecialchars($u['id']) ?>">Edit</a>
+                <div class="table-actions">
+                    <a href="/features/admin/edit_user_form.php?id=<?= htmlspecialchars($u['id']) ?>" class="btn-ghost">Edit</a>
 
-                <form method="POST"
-                      action="/features/admin/delete_user.php"
-                      style="display: inline;"
-                      onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <a href="/features/admin/user_posts.php?user_id=<?= htmlspecialchars($u['id']) ?>" class="btn-ghost">Edit Posts</a>
 
-                    <?= csrfField() ?>
+                    <form method="POST"
+                          action="/features/admin/delete_user.php"
+                          onsubmit="return confirm('Are you sure you want to delete this user?');">
 
-                    <input type="hidden"
-                           name="user_id"
-                           value="<?= htmlspecialchars($u['id']) ?>">
+                        <?= csrfField() ?>
 
-                    <button type="submit">Delete</button>
-                </form>
+                        <input type="hidden"
+                               name="user_id"
+                               value="<?= htmlspecialchars($u['id']) ?>">
+
+                        <button type="submit" class="btn-ghost">Delete</button>
+                    </form>
+                </div>
             </td>
         </tr>
     <?php endforeach; ?>
